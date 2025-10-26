@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 2. Para `proyecto-tecnico-frontend/README.md`
 
-## Getting Started
+```markdown
+# 🚀 Proyecto Técnico - Frontend (Dashboard)
 
-First, run the development server:
+Este proyecto es un dashboard web construido con Next.js y TypeScript para visualizar los datos procesados por el [proyecto backend de ETL](URL_DE_TU_REPOSITORIO_BACKEND).
+
+La aplicación requiere autenticación de usuario para acceder a los datos.
+
+## ✨ Características
+
+* **Autenticación Mandatoria:** Implementa "Iniciar sesión con Google" (OAuth 2.0) usando **Next-Auth**. Las rutas están protegidas.
+* **Visualización de Datos:** Muestra las corridas del pipeline desde la "tabla cabecera" (`/etl_runs`).
+* **Filtro Interactivo:** Permite filtrar las corridas (Todas, Válidas, Con Errores) y la UI se actualiza reactivamente.
+* **Ejecutor de SQL:** Cumpliendo con el diagrama de la prueba, incluye un componente para ejecutar consultas `SELECT` de forma segura contra la base de datos del backend.
+* **Bonus (Gráficos):** Muestra 2 gráficos de resumen (Barras y Pastel) usando **Chart.js**, que también reaccionan al filtro de datos.
+
+## 🛠️ Stack Tecnológico
+
+* **Framework:** Next.js 14 (App Router)
+* **Lenguaje:** TypeScript
+* **Autenticación:** Next-Auth
+* **Estilos:** Tailwind CSS
+* **Peticiones HTTP:** Axios
+* **Gráficos:** Chart.js (react-chartjs-2)
+* **Contenedores:** Docker & Docker Compose
+
+## 📐 Arquitectura (Diagrama de Componentes)
+```
++---------------------------+
+                            |      Google Cloud         |
+                            | (OAuth 2.0 Credentials)   |
+                            +---------------------------+
+                                    ^
+                                    | (Autenticación)
+                                    v
+(Usuario) <--> [Navegador] <--> [Servidor Next.js (Frontend)] <--> [Rutas API de Next-Auth] | | (Peticiones HTTP) v +---------------------------+ | API Backend (FastAPI) | | (localhost:8000) | +---------------------------+
+
+## 📋 Prácticas de Programación
+
+* **Variables de Entorno:** Todos los secretos (Google Client ID/Secret, NextAuth Secret) se manejan de forma segura en `.env.local`.
+* **Dockerización:** La aplicación de frontend está totalmente dockerizada y se conecta a la red del backend.
+* **Componentes Reutilizables:** La lógica de la UI está separada en componentes (ej. `SqlRunner`, `DataCharts`).
+* **Hooks de React:** Uso de `useState`, `useEffect` y `useCallback` para un manejo de estado eficiente y sin bugs de renderizado.
+* **Rutas Protegidas:** La página principal verifica el estado de la sesión (`useSession`) antes de renderizar los datos o la pantalla de login.
+
+---
+
+## 🚀 Cómo Ejecutar el Proyecto
+
+### Requisitos Previos
+
+* [Git](https://git-scm.com/)
+* [Docker](https://www.docker.com/)
+* [Docker Compose](https://docs.docker.com/compose/)
+* **Credenciales de Google OAuth 2.0** (ID de Cliente y Secreto).
+
+### 1. ¡IMPORTANTE! El Backend DEBE estar corriendo
+
+Este frontend depende 100% de la red y el API del backend.
+
+1.  Asegúrate de haber seguido los pasos del `README.md` del backend.
+2.  Verifica que el backend esté corriendo:
+    ```bash
+    # (En la carpeta del backend)
+    docker-compose up -d
+    ```
+3.  Verifica que la red del backend exista. Por defecto, se llama `proyecto-tecnico-backend_default`.
+
+### 2. Configuración del Frontend
+
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone [URL_DE_TU_REPOSITORIO_FRONTEND]
+    cd proyecto-tecnico-frontend
+    ```
+
+2.  **Crear el archivo `.env.local`:**
+    Crea un archivo llamado `.env.local` en la raíz y pega el siguiente contenido.
+
+    ```.env
+    # URL de tu API backend
+    NEXT_PUBLIC_API_URL=http://localhost:8000
+    
+    # --- Pega tus credenciales aquí ---
+    GOOGLE_CLIENT_ID=TU_ID_DE_CLIENTE_DE_GOOGLE
+    GOOGLE_CLIENT_SECRET=TU_SECRETO_DE_CLIENTE_DE_GOOGLE
+    
+    # Genera un secreto para next-auth (ej. ejecutando 'openssl rand -base64 32' en tu terminal)
+    NEXTAUTH_SECRET=TU_SECRETO_GENERADO
+    
+    # URL de tu frontend (¡Asegúrate de que el puerto coincida con docker-compose.yml!)
+    NEXTAUTH_URL=http://localhost:3001 
+    ```
+
+3.  **Verificar la Red del Backend en `docker-compose.yml`:**
+    Abre `docker-compose.yml` y asegúrate de que el nombre de la red externa (`external: true`) coincida con el nombre de tu red del backend (ej. `proyecto-tecnico-backend_default`).
+
+### 3. Ejecutar la Aplicación
+
+Usa Docker Compose para construir y levantar el servicio de frontend.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+docker-compose up --build -d
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Cómo Probar y Verificar
+Abrir la aplicación: Abre tu navegador y ve a la URL que definiste (ej. http://localhost:3001).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Probar Autenticación:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Deberías ver la pantalla de "Acceso Denegado".
 
-## Learn More
+Haz clic en "Iniciar sesión con Google" y completa el flujo.
 
-To learn more about Next.js, take a look at the following resources:
+Verificar el Dashboard:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Al volver, deberías ver tu nombre y la tabla "Corridas del Pipeline" con datos.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Prueba el filtro desplegable. La tabla y los gráficos deben actualizarse.
 
-## Deploy on Vercel
+Prueba el Ejecutor de SQL (ej. SELECT * FROM raw_users LIMIT 5;).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Verifica que los gráficos de bonificación se muestren correctamente.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Haz clic en "Cerrar sesión" para volver a la pantalla de login.
