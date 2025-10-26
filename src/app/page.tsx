@@ -1,65 +1,158 @@
-import Image from "next/image";
+'use client';
+
+import { useCallback, useEffect, useState } from 'react';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import axios from 'axios';
+
+import { SqlRunner } from '@/components/SqlRunner';
+
+type ETLRun = {
+  id: number;
+  run_timestamp: string;
+  processed_file: string;
+  valid_count: number;
+  invalid_count: number
+}
 
 export default function Home() {
+  const { data: session, status } = useSession();
+
+  const [etlData, setEtlData] = useState<ETLRun[]>([]);
+  const [loadingAPI, setLoadingAPI] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
+
+  const [filter, setFilter] = useState("all");
+
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  const fetchData = useCallback(async () => {
+    setLoadingAPI(true);
+    setApiError(null);
+    try {
+      const res = await axios.get(`${apiUrl}/etl_runs`);
+      setEtlData(res.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setApiError("Error loading backend data");
+    } finally {
+      setLoadingAPI(false);
+    }
+  }, [apiUrl]);
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      fetchData();
+    }
+  }, [status, fetchData]);
+
+  if (status === 'loading') {
+    return <main className="p-8"><h1>Checking session...</h1></main>;
+  }
+
+  if (status === 'unauthenticated') {
+    return (
+      <main className="flex flex-col items-center justify-center min-h-screen">
+        <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
+        <p className="mb-6">Please login to view the dashboard.</p>
+        <button
+          onClick={() => signIn('google')}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Login with Google
+        </button>
+      </main>
+    );
+  }
+
+  const filteredEtlData = etlData.filter((run) => {
+    if (filter === "invalid") {
+      return run.invalid_count > 0;
+    }
+    if (filter === "valid") {
+      return run.invalid_count === 0;
+    }
+    return true; // 'all'
+  });
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="p-8">
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-3xl font-bold">ETL Dashboard</h1>
+          <p className="text-gray-600">
+            Welcome, {session?.user?.name} {session?.user?.email}
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        <button
+          onClick={() => signOut()}
+          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+        >
+          Sign Out
+        </button>
+      </div>
+      <hr className="my-4" />
+      <h2 className="text-2xl font-semibold mb-4">Pipeline runs</h2>
+
+      <div className="flex justify-between items-center mb-4">
+        {/* Dropdown de Filtro */}
+        <div>
+          <label htmlFor="filter-select" className="mr-2 font-medium">
+            Filter by:
+          </label>
+          <select
+            id="filter-select"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="p-2 border rounded"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <option value="all">All runs</option>
+            <option value="valid">Valid runs</option>
+            <option value="invalid">Invalid runs</option>
+          </select>
         </div>
-      </main>
-    </div>
+        <button
+          onClick={fetchData}
+          disabled={loadingAPI}
+          className="mb-4 px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+        >
+          {loadingAPI ? "Loading..." : "Refresh data"}
+        </button>
+      </div>
+
+      {apiError && <p className="text-red-500">{apiError}</p>}
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="py-2 px-4 border">ID</th>
+              <th className="py-2 px-4 border">Timestamp</th>
+              <th className="py-2 px-4 border">File</th>
+              <th className="py-2 px-4 border">Valids</th>
+              <th className="py-2 px-4 border">Invalids</th>
+            </tr>
+          </thead>
+          <tbody>
+            { filteredEtlData.map((run) => (
+              <tr key={run.id} className="hover:bg-gray-50">
+                <td className="py-2 px-4 border text-center">{run.id}</td>
+                <td className="py-2 px-4 border">{run.run_timestamp}</td>
+                <td className="py-2 px-4 border">{run.processed_file}</td>
+                <td className="py-2 px-4 border text-center">{run.valid_count}</td>
+                <td className="py-2 px-4 border text-center">{run.invalid_count}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {filteredEtlData.length === 0 && etlData.length > 0 && (
+          <p className="text-center py-4">
+            No runs match with filter.
+          </p>
+        )}
+      </div>
+
+      <SqlRunner />
+      {/*TODO: Implementar gráficos */ }
+    </main>
   );
 }

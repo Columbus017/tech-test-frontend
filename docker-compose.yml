@@ -1,0 +1,25 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Montar el código para hot-reload
+      - ./src:/app/src
+      - ./public:/app/public
+    # Enviar las variables de entorno al contenedor
+    env_file:
+      - .env.local
+    # Mapear el puerto 3000 de Next.js al puerto 3000 de tu máquina
+    ports:
+      - "3000:3000"
+    # Asegurar que la red del backend esté disponible
+    networks:
+      - default
+      - backend_network
+
+networks:
+  default:
+  backend_network:
+    external: true
+    name: tech-test-backend_default
