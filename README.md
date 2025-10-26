@@ -1,13 +1,13 @@
 ## 2. Para `proyecto-tecnico-frontend/README.md`
 
 ```markdown
-# 🚀 Proyecto Técnico - Frontend (Dashboard)
+# Proyecto Técnico - Frontend (Dashboard)
 
 Este proyecto es un dashboard web construido con Next.js y TypeScript para visualizar los datos procesados por el [proyecto backend de ETL](URL_DE_TU_REPOSITORIO_BACKEND).
 
 La aplicación requiere autenticación de usuario para acceder a los datos.
 
-## ✨ Características
+## Características
 
 * **Autenticación Mandatoria:** Implementa "Iniciar sesión con Google" (OAuth 2.0) usando **Next-Auth**. Las rutas están protegidas.
 * **Visualización de Datos:** Muestra las corridas del pipeline desde la "tabla cabecera" (`/etl_runs`).
@@ -15,7 +15,7 @@ La aplicación requiere autenticación de usuario para acceder a los datos.
 * **Ejecutor de SQL:** Cumpliendo con el diagrama de la prueba, incluye un componente para ejecutar consultas `SELECT` de forma segura contra la base de datos del backend.
 * **Bonus (Gráficos):** Muestra 2 gráficos de resumen (Barras y Pastel) usando **Chart.js**, que también reaccionan al filtro de datos.
 
-## 🛠️ Stack Tecnológico
+## Stack Tecnológico
 
 * **Framework:** Next.js 14 (App Router)
 * **Lenguaje:** TypeScript
@@ -25,18 +25,19 @@ La aplicación requiere autenticación de usuario para acceder a los datos.
 * **Gráficos:** Chart.js (react-chartjs-2)
 * **Contenedores:** Docker & Docker Compose
 
-## 📐 Arquitectura (Diagrama de Componentes)
+## Arquitectura (Diagrama de Componentes)
 ```
-+---------------------------+
+                            +---------------------------+
                             |      Google Cloud         |
                             | (OAuth 2.0 Credentials)   |
                             +---------------------------+
                                     ^
                                     | (Autenticación)
                                     v
-(Usuario) <--> [Navegador] <--> [Servidor Next.js (Frontend)] <--> [Rutas API de Next-Auth] | | (Peticiones HTTP) v +---------------------------+ | API Backend (FastAPI) | | (localhost:8000) | +---------------------------+
+```(Usuario) <--> [Navegador] <--> [Servidor Next.js (Frontend)] <--> [Rutas API de Next-Auth] | | (Peticiones HTTP) v +---------------------------+ | API Backend (FastAPI) | | (localhost:8000) | +---------------------------+```
 
-## 📋 Prácticas de Programación
+
+## Prácticas de Programación
 
 * **Variables de Entorno:** Todos los secretos (Google Client ID/Secret, NextAuth Secret) se manejan de forma segura en `.env.local`.
 * **Dockerización:** La aplicación de frontend está totalmente dockerizada y se conecta a la red del backend.
@@ -46,7 +47,7 @@ La aplicación requiere autenticación de usuario para acceder a los datos.
 
 ---
 
-## 🚀 Cómo Ejecutar el Proyecto
+## Cómo Ejecutar el Proyecto
 
 ### Requisitos Previos
 
@@ -55,9 +56,9 @@ La aplicación requiere autenticación de usuario para acceder a los datos.
 * [Docker Compose](https://docs.docker.com/compose/)
 * **Credenciales de Google OAuth 2.0** (ID de Cliente y Secreto).
 
-### 1. ¡IMPORTANTE! El Backend DEBE estar corriendo
+### 1. Asegurarse de que el backend este corriendo
 
-Este frontend depende 100% de la red y el API del backend.
+El frontend depende 100% de la red y el API del backend.
 
 1.  Asegúrate de haber seguido los pasos del `README.md` del backend.
 2.  Verifica que el backend esté corriendo:
@@ -102,7 +103,7 @@ Usa Docker Compose para construir y levantar el servicio de frontend.
 
 ```bash
 docker-compose up --build -d
-
+```
 4. Cómo Probar y Verificar
 Abrir la aplicación: Abre tu navegador y ve a la URL que definiste (ej. http://localhost:3001).
 
