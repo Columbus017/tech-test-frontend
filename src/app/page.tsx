@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import axios from 'axios';
 
-import { SqlRunner } from '@/components/SqlRunner';
+import { DataCharts, SqlRunner } from '@/components';
 
 type ETLRun = {
   id: number;
@@ -152,7 +152,8 @@ export default function Home() {
       </div>
 
       <SqlRunner />
-      {/*TODO: Implementar gráficos */ }
+      
+      <DataCharts data={filteredEtlData} />
     </main>
   );
 }
