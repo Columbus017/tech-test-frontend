@@ -58,26 +58,26 @@ La aplicación requiere autenticación de usuario para acceder a los datos.
 
 Este frontend depende 100% de la red y el API del backend.
 
-1.  Asegúrate de haber seguido los pasos del `README.md` del backend.
-2.  Verifica que el backend esté corriendo:
+1.  Asegurarse de haber seguido los pasos del `README.md` del backend.
+2.  Verificar que el backend esté corriendo:
 
     ```bash
     docker-compose up -d
     ```
     
-4.  Verifica que la red del backend exista. Por defecto, se llama `proyecto-tecnico-backend_default`.
+4.  Verificar que la red del backend exista. Por defecto, se llama `proyecto-tecnico-backend_default`.
 
 ### 2. Configuración del Frontend
 
 1.  **Clonar el repositorio:**
-    *(Recuerda cambiar la URL por la de tu repositorio)*
+    *(Cambiar la URL por la de tu repositorio)*
     
     ```bash
     git clone https://www.google.com/search?q=https://github.com/tu-usuario/proyecto-tecnico-frontend.git cd proyecto-tecnico-frontend
     ```
     
 3.  **Crear el archivo `.env.local`:**
-    Crea un archivo llamado `.env.local` en la raíz y pega el siguiente contenido.
+    Crear un archivo llamado `.env.local` en la raíz y pega el siguiente contenido.
     
     ```.env
     URL de tu API backend
@@ -94,11 +94,11 @@ Este frontend depende 100% de la red y el API del backend.
     ```
     
 5.  **Verificar la Red del Backend en `docker-compose.yml`:**
-    Abre `docker-compose.yml` y asegúrate de que el nombre de la red externa (`external: true`) coincida con el nombre de tu red del backend (ej. `proyecto-tecnico-backend_default`).
+    Abrir `docker-compose.yml` y asegurarse de que el nombre de la red externa (`external: true`) coincida con el nombre de tu red del backend (ej. `proyecto-tecnico-backend_default`).
 
 ### 3. Ejecutar la Aplicación
 
-Usa Docker Compose para construir y levantar el servicio de frontend.
+Usar Docker Compose para construir y levantar el servicio de frontend.
 
 ```bash
 docker-compose up --build -d
@@ -107,7 +107,7 @@ docker-compose up --build -d
 ### 4. Cómo Probar y Verificar
 
 1.  **Abrir la aplicación:**
-    Abre tu navegador y ve a la URL que definiste (ej. `http://localhost:3001`).
+    Abrir el navegador e ir a la URL que definida (ej. `http://localhost:3000`).
 
 2.  **Probar Autenticación:**
     * Deberías ver la pantalla de "Acceso Denegado".
