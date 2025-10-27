@@ -5,14 +5,6 @@ Este proyecto es un dashboard web construido con Next.js y TypeScript para visua
 
 La aplicación requiere autenticación de usuario para acceder a los datos.
 
-## Características
-
-* **Autenticación Mandatoria:** Implementa "Iniciar sesión con Google" (OAuth 2.0) usando **Next-Auth**. Las rutas están protegidas.
-* **Visualización de Datos:** Muestra las corridas del pipeline desde la "tabla cabecera" (`/etl_runs`).
-* **Filtro Interactivo:** Permite filtrar las corridas (Todas, Válidas, Con Errores) y la UI se actualiza reactivamente.
-* **Ejecutor de SQL:** Cumpliendo con el diagrama de la prueba, incluye un componente para ejecutar consultas `SELECT` de forma segura contra la base de datos del backend.
-* **Bonus (Gráficos):** Muestra 2 gráficos de resumen (Barras y Pastel) usando **Chart.js**, que también reaccionan al filtro de datos.
-
 ## Stack Tecnológico
 
 * **Framework:** Next.js 14 (App Router)
@@ -24,6 +16,7 @@ La aplicación requiere autenticación de usuario para acceder a los datos.
 * **Contenedores:** Docker & Docker Compose
 
 ## Arquitectura (Diagrama de Componentes)
+
 ```
                                 +---------------------------+
                                 |      Google Cloud         |
@@ -67,20 +60,25 @@ Este frontend depende 100% de la red y el API del backend.
 
 1.  Asegúrate de haber seguido los pasos del `README.md` del backend.
 2.  Verifica que el backend esté corriendo:
+
     ```bash
     docker-compose up -d
     ```
-3.  Verifica que la red del backend exista. Por defecto, se llama `proyecto-tecnico-backend_default`.
+    
+4.  Verifica que la red del backend exista. Por defecto, se llama `proyecto-tecnico-backend_default`.
 
 ### 2. Configuración del Frontend
 
 1.  **Clonar el repositorio:**
     *(Recuerda cambiar la URL por la de tu repositorio)*
+    
     ```bash
     git clone https://www.google.com/search?q=https://github.com/tu-usuario/proyecto-tecnico-frontend.git cd proyecto-tecnico-frontend
     ```
-2.  **Crear el archivo `.env.local`:**
+    
+3.  **Crear el archivo `.env.local`:**
     Crea un archivo llamado `.env.local` en la raíz y pega el siguiente contenido.
+    
     ```.env
     URL de tu API backend
     NEXT_PUBLIC_API_URL=http://localhost:8000
@@ -94,15 +92,18 @@ Este frontend depende 100% de la red y el API del backend.
     URL de tu frontend (¡Asegúrate de que el puerto coincida con docker-compose.yml!)
     NEXTAUTH_URL=http://localhost:3000
     ```
-3.  **Verificar la Red del Backend en `docker-compose.yml`:**
+    
+5.  **Verificar la Red del Backend en `docker-compose.yml`:**
     Abre `docker-compose.yml` y asegúrate de que el nombre de la red externa (`external: true`) coincida con el nombre de tu red del backend (ej. `proyecto-tecnico-backend_default`).
 
 ### 3. Ejecutar la Aplicación
 
 Usa Docker Compose para construir y levantar el servicio de frontend.
+
 ```bash
 docker-compose up --build -d
 ```
+
 ### 4. Cómo Probar y Verificar
 
 1.  **Abrir la aplicación:**
