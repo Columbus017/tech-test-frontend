@@ -88,7 +88,7 @@ El frontend depende 100% de la red y el API del backend.
     NEXTAUTH_SECRET=TU_SECRETO_GENERADO
     
     # URL de tu frontend (¡Asegúrate de que el puerto coincida con docker-compose.yml!)
-    NEXTAUTH_URL=http://localhost:3001 
+    NEXTAUTH_URL=http://localhost:3000
     ```
 
 3.  **Verificar la Red del Backend en `docker-compose.yml`:**
