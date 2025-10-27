@@ -1,5 +1,3 @@
-## 2. Para `proyecto-tecnico-frontend/README.md`
-
 ```markdown
 # Proyecto Técnico - Frontend (Dashboard)
 
@@ -34,8 +32,7 @@ La aplicación requiere autenticación de usuario para acceder a los datos.
                                     ^
                                     | (Autenticación)
                                     v
-```(Usuario) <--> [Navegador] <--> [Servidor Next.js (Frontend)] <--> [Rutas API de Next-Auth] | | (Peticiones HTTP) v +---------------------------+ | API Backend (FastAPI) | | (localhost:8000) | +---------------------------+```
-
+    (Usuario) <--> [Navegador] <--> [Servidor Next.js (Frontend)] <--> [Rutas API de Next-Auth] | | (Peticiones HTTP) v +---------------------------+ | API Backend (FastAPI) | | (localhost:8000) | +---------------------------+```
 
 ## Prácticas de Programación
 
@@ -105,7 +102,7 @@ Usa Docker Compose para construir y levantar el servicio de frontend.
 docker-compose up --build -d
 ```
 4. Cómo Probar y Verificar
-Abrir la aplicación: Abre tu navegador y ve a la URL que definiste (ej. http://localhost:3001).
+  1. Abrir la aplicación: Abre tu navegador y ve a la URL que definiste (ej. http://localhost:3000).
 
 Probar Autenticación:
 
