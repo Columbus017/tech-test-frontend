@@ -20,7 +20,7 @@ The application requires user authentication to access the data.
                                 | (OAuth 2.0 Credentials)   |
                                 +---------------------------+
                                         ^
-                                        | (Autenticación)
+                                        | (Authentication)
                                         v
 (User) <--> [Browser] <--> [Servidor Next.js (Frontend)] <--> [Next-Auth API Routes]
                                          |
